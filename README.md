@@ -16,7 +16,7 @@ pip install python-telegram-bot --upgrade --pre
 
 在`config.json`文件中填写：
 
-1. ChatGPT网页中的`session_token`
+1. ChatGPT网页中的`session_token`，获得`session_token`的方法见[这里](https://github.com/acheong08/ChatGPT)
 2. Telegram Bot的`token`
 3. 代理服务器，如果不需要代理，则留空
 
