@@ -76,13 +76,14 @@ if __name__ == "__main__":
 
     with open("config.json", "r") as f:
         config = json.load(f)
-    chatbot = Chatbot(config)
-    if 'session_token' in config:
-        chatbot.refresh_session()
     if 'http_proxy' in config and config['http_proxy'] != "":
         os.environ["http_proxy"] = config['http_proxy']
     if 'https_proxy' in config and config['https_proxy'] != "":
         os.environ["https_proxy"] = config['https_proxy']
+
+    chatbot = Chatbot(config)
+    if 'session_token' in config:
+        chatbot.refresh_session()
 
     application = ApplicationBuilder().token('<your_token>').build()
     start_handler = CommandHandler('start', start)

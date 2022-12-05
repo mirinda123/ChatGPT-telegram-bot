@@ -1,6 +1,7 @@
 {
     "Authorization": "<API_KEY>",
     "session_token": "",
+    "bot_token": "",
     "http_proxy": "http://127.0.0.1:7890",
     "https_proxy": "http://127.0.0.1:7890"
 }

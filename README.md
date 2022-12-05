@@ -14,7 +14,15 @@ pip install python-telegram-bot --upgrade --pre
 
 # 使用方法
 
-在`config.json`文件中填写`session_token`，bot的`token`，然后`python main.py`，对bot发送文字即可
+在`config.json`文件中填写：
+
+1. ChatGPT网页中的`session_token`
+2. Telegram Bot的`token`
+3. 代理服务器，如果不需要代理，则留空
+
+然后`python main.py`，对bot发送文字即可
+
+还支持：
 
 `/reset`：忘掉之前的对话，重新开始新的对话
 
