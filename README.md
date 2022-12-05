@@ -1,5 +1,5 @@
 # ChatGPT-telegram-bot
-快速轻量级搭建电报ChatGPT机器人，无需模拟浏览器，使用[@acheong08](https://github.com/acheong08)中使用的API
+快速轻量级搭建电报ChatGPT机器人，使用[@acheong08](https://github.com/acheong08)中使用的API，无需模拟浏览器
 
 # ChatGPT 注册方法
 
