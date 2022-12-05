@@ -24,7 +24,19 @@ def get_input(prompt):
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="欢迎使用ChatGPT")
+
+
+async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chatbot.reset_chat()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="已重置对话上下文")
+
+async def refresh(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chatbot.refresh_session()
+    # Save the new config
+    with open("config.json", "w") as f:
+        json.dump(chatbot.config, f)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="已刷新新的会话")
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -74,8 +86,13 @@ if __name__ == "__main__":
 
     application = ApplicationBuilder().token('<your_token>').build()
     start_handler = CommandHandler('start', start)
+    reset_handler = CommandHandler('reset', reset)
+    refresh_handler = CommandHandler('refresh', refresh)
     echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
+
     application.add_handler(start_handler)
+    application.add_handler(reset_handler)
+    application.add_handler(refresh_handler)
     application.add_handler(echo_handler)
 
     application.run_polling()
