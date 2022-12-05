@@ -22,11 +22,12 @@ def get_input(prompt):
     # print(user_input)
     return user_input
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
+async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lines_printed = 0
     result = ""
     try:
@@ -41,7 +42,7 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for part in message_parts:
                 formatted_parts.extend(textwrap.wrap(part, width=80))
                 for formatted_line in formatted_parts:
-                    if (len(formatted_parts) > lines_printed + 1):
+                    if len(formatted_parts) > lines_printed + 1:
                         # print(formatted_parts[lines_printed])
                         result += formatted_parts[lines_printed]
                         lines_printed += 1
@@ -56,44 +57,20 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 if __name__ == "__main__":
 
-    os.environ["http_proxy"] = "http://127.0.0.1:7890"
-    os.environ["https_proxy"] = "http://127.0.0.1:7890"
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
-
 
     with open("config.json", "r") as f:
         config = json.load(f)
     chatbot = Chatbot(config)
     if 'session_token' in config:
         chatbot.refresh_session()
-
-    # while True:
-    #     prompt = get_input("\nYou:\n")
-    #     if prompt.startswith("!"):
-    #         if prompt == "!help":
-    #             print("""
-    #             !help - Show this message
-    #             !reset - Forget the current conversation
-    #             !refresh - Refresh the session authentication
-    #             !exit - Exit the program
-    #             """)
-    #             continue
-    #         elif prompt == "!reset":
-    #             chatbot.reset_chat()
-    #             print("Chat session reset.")
-    #             continue
-    #         elif prompt == "!refresh":
-    #             chatbot.refresh_session()
-    #             print("Session refreshed.\n")
-    #             # Save the new config
-    #             with open("config.json", "w") as f:
-    #                 json.dump(chatbot.config, f)
-    #             continue
-    #         elif prompt == "!exit":
-    #             break
+    if 'http_proxy' in config and config['http_proxy'] != "":
+        os.environ["http_proxy"] = config['http_proxy']
+    if 'https_proxy' in config and config['https_proxy'] != "":
+        os.environ["https_proxy"] = config['https_proxy']
 
     application = ApplicationBuilder().token('<your_token>').build()
     start_handler = CommandHandler('start', start)
@@ -102,4 +79,3 @@ if __name__ == "__main__":
     application.add_handler(echo_handler)
 
     application.run_polling()
-
