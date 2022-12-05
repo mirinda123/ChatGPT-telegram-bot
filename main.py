@@ -85,7 +85,7 @@ if __name__ == "__main__":
     if 'session_token' in config:
         chatbot.refresh_session()
 
-    application = ApplicationBuilder().token('<your_token>').build()
+    application = ApplicationBuilder().token(config['bot_token']).build()
     start_handler = CommandHandler('start', start)
     reset_handler = CommandHandler('reset', reset)
     refresh_handler = CommandHandler('refresh', refresh)
