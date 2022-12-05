@@ -17,5 +17,6 @@ pip install python-telegram-bot --upgrade --pre
 在`config.json`文件中填写`session_token`，bot的`token`，然后`python main.py`，对bot发送文字即可
 
 `/reset`：忘掉之前的对话，重新开始新的对话
+
 `/refresh`：刷新网页，重新获得一个`session_token`
 
