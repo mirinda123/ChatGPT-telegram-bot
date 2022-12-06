@@ -24,12 +24,32 @@ def get_input(prompt):
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="欢迎使用ChatGPT")
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="欢迎使用ChatGPT, 请先登录")
 
 
+async def login(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    config["email"] = context.args[0]
+    config["password"] = context.args[1]
+    global chatbot
+    chatbot = Chatbot(config)
+    with open("config.json", "w") as f:
+        json.dump(chatbot.config, f)
+    # chatbot.refresh_session()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="登录成功")
+
+async def token(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
+    config["session_token"] = context.args[0]
+    global chatbot
+    chatbot = Chatbot(config)
+    with open("config.json", "w") as f:
+        json.dump(chatbot.config, f)
+    # chatbot.refresh_session()
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="登录成功")
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatbot.reset_chat()
     await context.bot.send_message(chat_id=update.effective_chat.id, text="已重置对话上下文")
+
 
 async def refresh(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chatbot.refresh_session()
@@ -54,12 +74,12 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for part in message_parts:
                 formatted_parts.extend(textwrap.wrap(part, width=80))
                 for formatted_line in formatted_parts:
-                    if len(formatted_parts) > lines_printed + 1:
-                        # print(formatted_parts[lines_printed])
+                    if (len(formatted_parts) > lines_printed + 1):
                         result += formatted_parts[lines_printed]
+                        print(formatted_parts[lines_printed])
                         lines_printed += 1
-        # print(formatted_parts[lines_printed])
         result += formatted_parts[lines_printed]
+        print(formatted_parts[lines_printed])
     except Exception as e:
         print("Something went wrong!")
         print(e)
@@ -81,17 +101,19 @@ if __name__ == "__main__":
     if 'https_proxy' in config and config['https_proxy'] != "":
         os.environ["https_proxy"] = config['https_proxy']
 
-    chatbot = Chatbot(config)
-    if 'session_token' in config:
-        chatbot.refresh_session()
+    chatbot = None
 
     application = ApplicationBuilder().token(config['bot_token']).build()
     start_handler = CommandHandler('start', start)
+    login_handler = CommandHandler('login', login)
+    token_handler = CommandHandler('token', token)
     reset_handler = CommandHandler('reset', reset)
     refresh_handler = CommandHandler('refresh', refresh)
     echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), echo)
 
     application.add_handler(start_handler)
+    application.add_handler(login_handler)
+    application.add_handler(token_handler)
     application.add_handler(reset_handler)
     application.add_handler(refresh_handler)
     application.add_handler(echo_handler)
